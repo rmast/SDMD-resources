@@ -1,0 +1,7 @@
+[submodule "squash"]
+	path = SourceCode/Code/shared/squash
+	url = https://github.com/quixdb/squash
+[submodule "SourceCode/Code/shared/GeometricTools"]
+	path = SourceCode/Code/shared/GeometricTools
+	url = https://github.com/davideberly/GeometricTools.git
+	branch = eac03d05ea443316866c5e3662111ecd73e7094c
