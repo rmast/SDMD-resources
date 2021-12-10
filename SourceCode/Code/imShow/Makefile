@@ -4,7 +4,7 @@ CUDAROOT  = /usr/local/cuda
 CUDAINC   = $(CUDAROOT)/lib64
 
 INCLUDES = -Iinclude -I/usr/local/cuda/include -I../shared -I../shared/include -I../shared/FastAC -I../shared/squash/squash -I../shared/squash -I../shared/SplineGenerate -L../shared/squash/squash -Wl,-rpath=../shared/squash/squash -L$(CUDAINC) -L/usr/lib/x86_64-linux-gnu -L/usr/local/cuda-10.0/targets/x86_64-linux/lib 
-CPPFLAGS = -Wall -lm -Wno-variadic-macros -std=c++11 -g
+CPPFLAGS = -Wall -lm -Wno-variadic-macros -std=c++11 -g -DGTE_USE_LINUX
 CPPFLAGS += $(INCLUDES)
 CUDAFLAGS = -lcudart -lcuda -lGL -lGLU -lGLEW -lglut
 

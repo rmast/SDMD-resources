@@ -5,11 +5,21 @@
 // https://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
 // Version: 4.0.2019.08.13
 
+#undef __gl_h_
+#undef __GL_H__
+#undef __glext_h_
+#undef __GLEXT_H_
 #pragma once
+#if defined(__gl_h_) || defined(__GL_H__)
+#error gl.h included before OpenGL4.h
+#endif
+#if defined(__glext_h_) || defined(__GLEXT_H_)
+#error glext.h included before OpenGL4.h
+#endif
 
 #include <Applications/Window3.h>
 #include <Mathematics/BSplineCurveFit.h>
-#include <Mathematics/BSplineCurveGenerate.h>
+#include <BSplineCurveGenerate.h>
 using namespace gte;
 using namespace std; 
 

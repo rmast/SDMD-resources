@@ -5,3 +5,6 @@
 	path = SourceCode/Code/shared/GeometricTools
 	url = https://github.com/davideberly/GeometricTools.git
 	branch = eac03d05ea443316866c5e3662111ecd73e7094c
+[submodule "SourceCode/Code/shared/GTE"]
+	path = SourceCode/Code/shared/GTE
+	url = https://github.com/zhouxs1023/GTE.git
