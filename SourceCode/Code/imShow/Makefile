@@ -49,10 +49,19 @@ $(OUTDIR)%.o : %.cpp
 	@mkdir -p $(OUTDIR)
 	$(CXX) $(CPPFLAGS) -c $< -o $@
 
-external:
+../shared/CUDASkel2D/CUDASkel2D.a:
 	make -C ../shared/CUDASkel2D -f Makefile skeleton
-	make -C ../shared/squash -f Makefile	
+
+../shared/lodepng/lodepng.o:
 	make -C ../shared/lodepng -f Makefile
+
+../shared/squash/Makefile:
+	(cd ../shared/squash;./configure)
+
+../shared/squash/squash/libsquash0.8.so:
+	make -C ../shared/squash -f Makefile	
+
+external: ../shared/CUDASkel2D/CUDASkel2D.a ../shared/lodepng/lodepng.o ../shared/squash/Makefile ../shared/squash/squash/libsquash0.8.so
 	make -C ../shared/SplineGenerate/BSplineCurveFitter CFG=configuration APP=BSplineCurveFitter -f ../makesample.gte
 	g++ -g ../shared/FastAC/arithmetic_codec.cpp -c -o ../shared/FastAC/arithmetic_codec.o
 
