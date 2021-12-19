@@ -5,7 +5,7 @@ CUDAINC   = $(CUDAROOT)/include
 CCFLAGS   =  -Iinclude -O3  -std=c++11
 NVCC = $(CUDAROOT)/bin/nvcc
 INCLUDES = -I. -Iinclude -I../shared -I../shared/include -I../shared/SplineGenerate -I../shared/FastAC -I../shared/squash -I../shared/squash/squash -Wl,-rpath=../shared/squash/squash -L../shared/squash/squash -L$(CUDALIB) -I$(CUDAINC)
-CPPFLAGS = -Wall -g -fPIC -std=c++14 -Wextra -pedantic -O3 -g -fopenmp
+CPPFLAGS = -Wall -g -fPIC -std=c++14 -Wextra -pedantic -O0 -g -fopenmp -DGTE_USE_LINUX -DDEBUG
 CPPFLAGS += $(INCLUDES)
 CPPFLAGS += $(CCFLAGS)
 CUDAFLAGS = -lcuda -lcudart
@@ -22,20 +22,34 @@ OBJ = $(OUTDIR)$(subst $(SPACE), $(OUTDIR),$(SOURCE:.cpp=.o))
 
 LFLAG=-L../shared/SplineGenerate/lib/configuration -lgtapplications -lgtgraphics -lgtmathematicsgpu -lX11 -lXext -lGL -lEGL -lpng -lpthread -lm 
 
-EXTERNAL = ../shared/bcl/libbcl.a ../shared/FastAC/arithmetic_codec.o  ../shared/CUDASkel2D/CUDASkel2D.a ../shared/configParser/lib/Config.a ../shared/squash/squash/libsquash0.8.so ../shared/SplineGenerate/BSplineCurveFitter/configuration/BSplineCurveFitterWindow3.o
+EXTERNAL = ../shared/bcl/libbcl.a ../shared/FastAC/arithmetic_codec.o  ../shared/CUDASkel2D/CUDASkel2D.a ../shared/configParser/lib/Config.a ../shared/squash/squash/libsquash0.8.so ../shared/SplineGenerate/BSplineCurveFitter/configuration/BSplineCurveFitterWindow3.o 
 ABSOUT=$(MPATH:Makefile=)$(OUTDIR)
 .PHONY: all external out
 default:all
 
 
-all:external $(OBJ)
+all:external $(OBJ) ../shared/squash/squash/libsquash0.8.so
 	$(CXX) $(CPPFLAGS) -o $(OUTFILE) $(OBJ) $(EXTERNAL) $(CUDAFLAGS) $(LFLAG)
+
+../shared/CUDASkel2D/CUDASkel2D.a:
+	make -C ../shared/CUDASkel2D -f Makefile skeleton
+
+../shared/squash/.configure:
+	git submodule update --init
+
+../shared/squash/Makefile: ../shared/squash/.configure
+	(cd ../shared/squash;./configure)
+
+../shared/squash/squash/libsquash0.8.so: ../shared/squash/Makefile
+	make -C ../shared/squash -f Makefile
+
+../shared/bcl/libbcl.a:
+	make -C ../shared/bcl -f Makefile 
+
+../shared/configParser/lib/Config.a:
+	make -C ../shared/configParser -f Makefile
 	
 external:
-	make -C ../shared/configParser -f Makefile
-	make -C ../shared/CUDASkel2D -f Makefile skeleton
-	make -C ../shared/squash -f Makefile
-	make -C ../shared/bcl -f Makefile 
 	make -C ../shared/SplineGenerate/BSplineCurveFitter CFG=configuration APP=BSplineCurveFitter -f ../makesample.gte 
 	g++ -g ../shared/FastAC/arithmetic_codec.cpp -c -o ../shared/FastAC/arithmetic_codec.o
 

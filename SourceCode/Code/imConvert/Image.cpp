@@ -65,7 +65,6 @@ Image::Image(FIELD<float> *in) {
 }
 
 Image::~Image() {
-    deallocateCudaMem();
     free(importance);
     free(graylevels);
 }
@@ -1096,9 +1095,8 @@ int Image:: CalculateCPnum(int i, FIELD<float> *imDupeCurr, int WriteToFile)
     int seq = 0; 
     int CPnum = 0;
     bool print=false;
-    
     skelImp = computeSkeleton(imDupeCurr, print);
-    
+
     //NewRemoveDoubleSkel();
     //importance map or saliency map transforms to skel.
     skelCurr = new FIELD<float>(skelImp->dimX(), skelImp->dimY());
@@ -1125,7 +1123,7 @@ int Image:: CalculateCPnum(int i, FIELD<float> *imDupeCurr, int WriteToFile)
         stringstream skel;
         skel<<"skel"<<time1<<"-"<<i<<".pgm";
         skelCurr->writePGM(skel.str().c_str());
-          
+
     }
      */ 
     ///////new method-----segment and store into the BranchSets;
@@ -1143,7 +1141,6 @@ int Image:: CalculateCPnum(int i, FIELD<float> *imDupeCurr, int WriteToFile)
             ////fit with spline///
     //cout<<"BranchSet.size()--"<<BranchSet.size()<<endl;
      //begin = std::chrono::steady_clock::now();
- 
     if(BranchSet.size()>0){
         BSplineCurveFitterWindow3 spline;
         if (WriteToFile>0) spline.SplineFit2(BranchSet, hausdorff, diagonal, i, connection, WriteToFile);
@@ -1453,7 +1450,7 @@ void Image::computeSkeletons() {
     FIELD<float> *imDupe;
     FIELD<float> *skelCurr = 0;
     //int seq = 0;
-    initialize_skeletonization(im);// Does nothing with CPU skeletons but sets up CUDA skeletonization
+    //initialize_skeletonization(im);// Does nothing with CPU skeletons but sets up CUDA skeletonization
    
     diagonal  = sqrt((float)(im->dimX() * im->dimX() + im->dimY() * im->dimY()));
     bool firstTime = true;
@@ -1479,7 +1476,7 @@ void Image::computeSkeletons() {
                 /*  stringstream ss;
                 ss<<"level"<<time1<<"-"<<i<<".pgm";
                 imDupeBack->writePGM(ss.str().c_str());
-              */  
+                */
                 //initialize_skeletonization(im);// Does nothing with CPU skeletons but sets up CUDA skeletonization
    
                 if(!adaptive){

@@ -12,6 +12,7 @@
 #include "include/messages.h"
 #include "include/image.h"
 #include "include/ImageWriter.hpp"
+#include "include/skeleton_cuda.hpp"
 #include "configParser/include/Config.hpp"
 #include <chrono>
 #include <boost/algorithm/string.hpp>
@@ -237,6 +238,7 @@ void execute_color_pipeline(IMAGE<float>* im) {
     int Rfirst = 0;
     int Gfirst = 0;
     int Bfirst = 0;
+    initialize_skeletonization(&red_channel);// Does nothing with CPU skeletons but sets up CUDA skeletonization
     Rfirst = execute_skeleton_pipeline(&red_channel, 1);
     if(c_space == COLORSPACE::YCC){
         //SKELETON_SALIENCY_THRESHOLD *= Thresholdtime;
@@ -318,10 +320,12 @@ int main(int argc, char **argv) {
             PRINT(MSG_ERROR, "Failed to read file.\n");
             exit(EXIT_FAILURE);
         }
+	initialize_skeletonization(field);// Does nothing with CPU skeletons but sets up CUDA skeletonization
         execute_gray_pipeline(field);
     }
     //Outfile.close();
     PRINT(MSG_NORMAL, "-----------Done with everything!!!!---------\n");
+    deallocateCudaMem();
     return 0;
 }
 
