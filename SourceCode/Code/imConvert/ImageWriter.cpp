@@ -300,7 +300,7 @@ int ImageWriter::save() {
         auto out = reinterpret_cast<unsigned char*>(const_cast<char*>(ofBuffer.str().c_str()));
         PRINT(MSG_NORMAL, "NoSquash: Bits / pixel: %3.4f\n", ofBuffer.str().size() / (double)(num_pixels));
         of.write((const char *) &out[0], ofBuffer.str().size());
-        //free(out);
+        free(out);
     }
 
 compress(val_structCR); //Just for calculating CR

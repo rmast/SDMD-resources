@@ -5,7 +5,7 @@ CUDAINC   = $(CUDAROOT)/include
 CCFLAGS   =  -Iinclude -O3  -std=c++11
 NVCC = $(CUDAROOT)/bin/nvcc
 INCLUDES = -I. -Iinclude -I../shared -I../shared/include -I../shared/SplineGenerate -I../shared/FastAC -I../shared/squash -I../shared/squash/squash -Wl,-rpath=../shared/squash/squash -L../shared/squash/squash -L$(CUDALIB) -I$(CUDAINC)
-CPPFLAGS = -Wall -g -fPIC -std=c++14 -Wextra -pedantic -O0 -g -fopenmp -DGTE_USE_LINUX -DDEBUG
+CPPFLAGS = -Wall -g -fPIC -std=c++14 -Wextra -pedantic -O3 -g -fopenmp
 CPPFLAGS += $(INCLUDES)
 CPPFLAGS += $(CCFLAGS)
 CUDAFLAGS = -lcuda -lcudart
@@ -24,20 +24,17 @@ LFLAG=-L../shared/SplineGenerate/lib/configuration -lgtapplications -lgtgraphics
 
 EXTERNAL = ../shared/bcl/libbcl.a ../shared/FastAC/arithmetic_codec.o  ../shared/CUDASkel2D/CUDASkel2D.a ../shared/configParser/lib/Config.a ../shared/squash/squash/libsquash0.8.so ../shared/SplineGenerate/BSplineCurveFitter/configuration/BSplineCurveFitterWindow3.o 
 ABSOUT=$(MPATH:Makefile=)$(OUTDIR)
-.PHONY: all external out
+.PHONY: all out
 default:all
 
 
-all:external $(OBJ) ../shared/squash/squash/libsquash0.8.so
+all: ../shared/FastAC/arithmetic_codec.o ../shared/squash/squash/libsquash0.8.so ../shared/CUDASkel2D/CUDASkel2D.a ../shared/SplineGenerate/BSplineCurveFitter/configuration/BSplineCurveFitterWindow3.o $(OBJ) 
 	$(CXX) $(CPPFLAGS) -o $(OUTFILE) $(OBJ) $(EXTERNAL) $(CUDAFLAGS) $(LFLAG)
 
 ../shared/CUDASkel2D/CUDASkel2D.a:
 	make -C ../shared/CUDASkel2D -f Makefile skeleton
 
-../shared/squash/.configure:
-	git submodule update --init
-
-../shared/squash/Makefile: ../shared/squash/.configure
+../shared/squash/Makefile:
 	(cd ../shared/squash;./configure)
 
 ../shared/squash/squash/libsquash0.8.so: ../shared/squash/Makefile
@@ -48,10 +45,13 @@ all:external $(OBJ) ../shared/squash/squash/libsquash0.8.so
 
 ../shared/configParser/lib/Config.a:
 	make -C ../shared/configParser -f Makefile
-	
-external:
+
+../shared/SplineGenerate/BSplineCurveFitter/configuration/BSplineCurveFitterWindow3.o:
 	make -C ../shared/SplineGenerate/BSplineCurveFitter CFG=configuration APP=BSplineCurveFitter -f ../makesample.gte 
+
+../shared/FastAC/arithmetic_codec.o:
 	g++ -g ../shared/FastAC/arithmetic_codec.cpp -c -o ../shared/FastAC/arithmetic_codec.o
+
 
 
 library : all
@@ -64,7 +64,7 @@ $(OUTDIR)%.o : %.cpp
 	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	$(RM) *.o *.gch
+	$(RM) *.o *.gch ../shared/SplineGenerate/BSplineCurveFitter/configuration/BSplineCurveFitterWindow3.o ../shared/CUDASkel2D/CUDASkel2D.a
 	$(RM) ../shared/FastAC/arithmetic_codec.o
 	$(RM) -rf lib
 	$(RM) -rf out
