@@ -51,8 +51,7 @@ void deallocateCudaMem() {
 int initialize_skeletonization(FIELD<float>* im) {
     xM = im->dimX();
     yM = im->dimY();
-    fboSize = skelft2DSize(xM + yM, yM + xM);//   Get size of the image that CUDA will actually use to process our nx x ny image
-    //fboSize = 4096;
+    fboSize = skelft2DSize(xM , yM);//   Get size of the image that CUDA will actually use to process our nx x ny image
     allocateCudaMem(fboSize);
     return fboSize;
 }

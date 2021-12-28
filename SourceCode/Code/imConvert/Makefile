@@ -2,10 +2,10 @@ CXX = g++
 CUDAROOT  = /usr/local/cuda
 CUDALIB   = $(CUDAROOT)/lib64
 CUDAINC   = $(CUDAROOT)/include
-CCFLAGS   =  -Iinclude -O3  -std=c++11
+CCFLAGS   =  -Iinclude -DGTE_USE_LINUX -DDEBUG -O0 
 NVCC = $(CUDAROOT)/bin/nvcc
 INCLUDES = -I. -Iinclude -I../shared -I../shared/include -I../shared/SplineGenerate -I../shared/FastAC -I../shared/squash -I../shared/squash/squash -Wl,-rpath=../shared/squash/squash -L../shared/squash/squash -L$(CUDALIB) -I$(CUDAINC)
-CPPFLAGS = -Wall -g -fPIC -std=c++14 -Wextra -pedantic -O3 -g -fopenmp
+CPPFLAGS = -Wall -g -fPIC -Wextra -pedantic -fopenmp 
 CPPFLAGS += $(INCLUDES)
 CPPFLAGS += $(CCFLAGS)
 CUDAFLAGS = -lcuda -lcudart
