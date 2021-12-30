@@ -34,7 +34,10 @@ all: ../shared/FastAC/arithmetic_codec.o ../shared/squash/squash/libsquash0.8.so
 ../shared/CUDASkel2D/CUDASkel2D.a:
 	make -C ../shared/CUDASkel2D -f Makefile skeleton
 
-../shared/squash/Makefile:
+../shared/squash/configure:
+	git submodule update --init
+
+../shared/squash/Makefile: ../shared/squash/configure
 	(cd ../shared/squash;./configure)
 
 ../shared/squash/squash/libsquash0.8.so: ../shared/squash/Makefile
