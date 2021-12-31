@@ -1,4 +1,5 @@
 function ssimval = ssim_(img1, num)
+pkg load image
 
 img1 = imread(img1);
 %img2 = imread(img2);
@@ -18,10 +19,12 @@ b = uint8(min(max(0, round(x + 1.772  * (y - 128)                     )), 255));
 combined_RGB = cat(3,r,g,b); 
 
 OutString=num2str(num);
+printf("%d%s\n",size (combined_RGB),OutString);
 imwrite(combined_RGB, OutString, 'png');
 
 img2 = rgb2gray(combined_RGB);
 
+imwrite(img2, "vraagstuk.png", 'png');
 ssimval = ssim(img2,img_1);
 
 

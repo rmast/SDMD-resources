@@ -36,7 +36,7 @@ do
 						
 						a=$((a+1))
 						####### write to config ######
-						cd /home/jieying/Desktop/SourceCode/Code/imConvert
+						cd ~/SDMD-resources/SourceCode/Code/imConvert
 						sed -i '1,$ d' controlPoint.txt
 						sed -i '19,$ d' ./config.txt
 						echo 'filename = '../../Image/$file/$image >> ./config.txt
@@ -69,7 +69,9 @@ do
 
 						###### compute skeleton msssim #####
 						
-						/usr/local/MATLAB/R2016b/bin/matlab -nosplash -nodesktop -r "ssim_('../Image/$file/$image', $a);quit;"
+						octave --silent --eval "ssim_('../Image/$file/$image', $a);quit;"
+
+						#/usr/local/MATLAB/R2016b/bin/matlab -nosplash -nodesktop -r "ssim_('../Image/$file/$image', $a);quit;"
 						
 						done
 						done
